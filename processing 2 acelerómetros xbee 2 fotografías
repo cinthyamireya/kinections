@@ -1,0 +1,70 @@
+// basado en el ejemplo transparency
+
+import processing.serial.*;
+
+PImage img;
+float offset = 0;
+float easing =  0.05;
+
+PImage imag;
+
+
+
+Serial port;
+float[] coord = new float[6];
+String data="0,0,0,0,0,0";
+
+void setup() {
+  size(1000, 800, P3D);
+  noStroke();
+  
+  img= loadImage("tania.jpg");
+  imag= loadImage("tania2.jpg");
+  
+  
+ println(Serial.list());
+ port = new Serial(this, Serial.list()[5], 9600);
+ port.clear();
+ port.bufferUntil('\n');
+ smooth(8);
+}
+
+void draw() {
+  
+  float a1,b1,c1, a2,b2,c2;
+  a1 = round(coord[0]);
+  b1 = round(coord[1]);
+  c1 = round(coord[2]);
+  a2 = round(coord[3]);
+  b2 = round(coord[4]);
+  c2 = round(coord[5]);
+  
+  
+   pushMatrix();
+ 
+  
+  rotateX(a1*200);
+  rotateY(b1*180);
+  rotateZ(c1*150);
+  image(imag,100, 0); 
+  
+  
+  rotateX(a2*200);
+  rotateY(b2*180);
+  rotateZ(c2*150);
+  tint(255, 127);
+  image(img,100, 0);  // Display at full opacity
+   
+   popMatrix();
+  
+ 
+  
+    }
+  
+
+
+void serialEvent(Serial port) {
+ //data = port.readStringUntil('\n');
+ data = port.readString();
+ coord = float(split(data,','));
+}
